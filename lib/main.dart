@@ -50,6 +50,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   var tm = ThemeMode.light;
+  String? _selectedLetter;
+  List _letterItems = ['A', 'B', 'C', 'D'];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -63,55 +66,146 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           centerTitle: true,
           title: const Text('Demo App'),
+          leading: const Icon(Icons.home),
+          actions: [
+            sw == false
+                ? const Icon(Icons.light_mode)
+                : const Icon(Icons.dark_mode),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Switch(
+                  activeColor: Colors.black,
+                  inactiveThumbColor: Colors.white,
+                  value: sw,
+                  onChanged: (value) {
+                    setState(() {
+                      sw = value;
+
+                      if (sw == false) {
+                        tm = ThemeMode.light;
+                        b = Colors.black;
+                      } else {
+                        tm = ThemeMode.dark;
+                        b = Colors.white;
+                      }
+                    });
+                  },
+                ),
+              ],
+            ),
+          ],
         ),
         // body: buildCheckboxListTile(context),
-        body: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        // body: buildSwitch(),
+        // body: buildDropdownButton(),
+        body: ListView(children: [
+          ExpansionTile(
+            title: const Text('Account'),
             children: [
-              Padding(
-                padding: EdgeInsets.all(40.0),
-                child: Text(
-                  'Light',
-                  style: TextStyle(
-                      color: b,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic),
-                ),
-              ),
-              Switch(
-                activeColor: Colors.black,
-                inactiveThumbColor: Colors.white,
-                value: sw,
-                onChanged: (value) {
-                  setState(() {
-                    sw = value;
-
-                    if (sw == false) {
-                      tm = ThemeMode.light;
-                      b = Colors.black;
-                    } else {
-                      tm = ThemeMode.dark;
-                      b = Colors.white;
-                    }
-                  });
+              Divider(color: Theme.of(context).primaryColor),
+              ListTile(
+                title: const Text('Sign Up!'),
+                subtitle: const Text('Where you can Register An Account'),
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (c) {
+                        return AlertDialog(
+                          content: Column(
+                            children: const [
+                              Text('Now we direct you to Sign Up page',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        );
+                      });
                 },
-              ),
-              Padding(
-                padding: const EdgeInsets.all(40.0),
-                child: Text(
-                  'Dark',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: b,
-                      fontStyle: FontStyle.italic),
-                ),
               ),
             ],
           ),
-        ),
+        ]),
+      ),
+    );
+  }
+
+  Center buildDropdownButton() {
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('select any number'),
+          const SizedBox(
+            width: 5,
+          ),
+          DropdownButton(
+            // hint: const Text('select letter'),
+            value: _selectedLetter,
+            items: _letterItems.map((item) {
+              return DropdownMenuItem(
+                value: item,
+                child: Text(item),
+              );
+            }).toList(),
+            onChanged: (value) {
+              setState(() {
+                _selectedLetter = value as String;
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Center buildSwitch() {
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: Text(
+              'Light',
+              style: TextStyle(
+                  color: b,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic),
+            ),
+          ),
+          Switch(
+            activeColor: Colors.black,
+            inactiveThumbColor: Colors.white,
+            value: sw,
+            onChanged: (value) {
+              setState(() {
+                sw = value;
+
+                if (sw == false) {
+                  tm = ThemeMode.light;
+                  b = Colors.black;
+                } else {
+                  tm = ThemeMode.dark;
+                  b = Colors.white;
+                }
+              });
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: Text(
+              'Dark',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: b,
+                  fontStyle: FontStyle.italic),
+            ),
+          ),
+        ],
       ),
     );
   }
