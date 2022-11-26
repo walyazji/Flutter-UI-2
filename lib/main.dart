@@ -99,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
               Padding(
-                padding: EdgeInsets.all(40.0),
+                padding: const EdgeInsets.all(40.0),
                 child: Text(
                   'Dark',
                   style: TextStyle(
