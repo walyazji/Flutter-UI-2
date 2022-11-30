@@ -4,23 +4,6 @@ void main() {
   runApp(const MyHomePage());
 }
 
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       title: 'Demo',
-//       themeMode: ThemeMode.light,
-//       theme: ThemeData(primarySwatch: Colors.teal, canvasColor: Colors.white),
-//       darkTheme:
-//           ThemeData(primarySwatch: Colors.teal, canvasColor: Colors.black),
-//       home: const MyHomePage(title: 'Flutter Demo Home Page'),
-//     );
-//   }
-// }
-
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
@@ -29,6 +12,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final _messangerKey = GlobalKey<ScaffoldMessengerState>();
   bool js = false;
   bool cSharp = false;
   bool py = false;
@@ -49,13 +33,16 @@ class _MyHomePageState extends State<MyHomePage> {
     return str;
   }
 
+  Text title = const Text('Demo App');
   var tm = ThemeMode.light;
   String? _selectedLetter;
   List _letterItems = ['A', 'B', 'C', 'D'];
+  final _key = GlobalKey<ScaffoldMessengerState>();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scaffoldMessengerKey: _key,
       debugShowCheckedModeBanner: false,
       title: 'Demo',
       themeMode: tm,
@@ -65,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
       home: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Text('Demo App'),
+          title: title,
           leading: const Icon(Icons.home),
           actions: [
             sw == false
@@ -99,36 +86,63 @@ class _MyHomePageState extends State<MyHomePage> {
         // body: buildCheckboxListTile(context),
         // body: buildSwitch(),
         // body: buildDropdownButton(),
-        body: ListView(children: [
-          ExpansionTile(
-            title: const Text('Account'),
-            children: [
-              Divider(color: Theme.of(context).primaryColor),
-              ListTile(
-                title: const Text('Sign Up!'),
-                subtitle: const Text('Where you can Register An Account'),
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (c) {
-                        return AlertDialog(
-                          content: Column(
-                            children: const [
-                              Text('Now we direct you to Sign Up page',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                        );
-                      });
-                },
-              ),
-            ],
-          ),
-        ]),
+        // body: buildExpansionTile(context),
       ),
     );
+  }
+
+  ListView buildExpansionTile(BuildContext context) {
+    return ListView(children: [
+      Padding(
+        padding: const EdgeInsets.only(top: 5),
+        child: ExpansionTile(
+          leading: const Icon(
+            Icons.perm_identity,
+            color: Colors.teal,
+          ),
+          title: const Text(
+            'Account',
+            style: TextStyle(fontSize: 25, color: Colors.teal),
+          ),
+          children: [
+            Divider(color: Theme.of(context).primaryColor),
+            const ListTile(
+              leading: Icon(Icons.add),
+              trailing: Icon(Icons.arrow_forward_ios),
+              title: Text('Sign Up!'),
+              subtitle: Text('Where you can Register An Account'),
+              // onTap: buildSnackbar(),
+            ),
+            const ListTile(
+              leading: Icon(Icons.account_circle),
+              trailing: Icon(Icons.arrow_forward_ios),
+              title: Text('Sign In!'),
+              subtitle: Text('Where you can Login with Your Account'),
+              // onTap: buildSnackbar(),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 10),
+      ExpansionTile(
+        leading: const Icon(
+          Icons.message,
+          color: Colors.teal,
+        ),
+        title: const Text('More Information',
+            style: TextStyle(fontSize: 25, color: Colors.teal)),
+        children: [
+          Divider(color: Theme.of(context).primaryColor),
+          const ListTile(
+            leading: Icon(Icons.phone),
+            trailing: Icon(Icons.arrow_forward_ios),
+            title: Text('Contact'),
+            subtitle: Text('Where you can Call Us'),
+            // onTap: buildSnackbar,
+          ),
+        ],
+      ),
+    ]);
   }
 
   Center buildDropdownButton() {
@@ -290,5 +304,19 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
+  }
+
+  buildSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: const Text(
+        'Now we direct you to Sign Up page',
+        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+      ),
+      backgroundColor: Colors.teal,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      behavior: SnackBarBehavior.floating,
+      duration: const Duration(seconds: 1),
+    ));
   }
 }
