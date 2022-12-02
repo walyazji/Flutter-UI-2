@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:marquee/marquee.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() {
   runApp(const MyHomePage());
@@ -38,6 +42,17 @@ class _MyHomePageState extends State<MyHomePage> {
   String? _selectedLetter;
   List _letterItems = ['A', 'B', 'C', 'D'];
   final _key = GlobalKey<ScaffoldMessengerState>();
+  final ImagePicker _picker = ImagePicker();
+  File? pickedImage;
+  fetchImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+    if (image == null) {
+      return;
+    }
+    setState(() {
+      pickedImage = File(image.path);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +102,89 @@ class _MyHomePageState extends State<MyHomePage> {
         // body: buildSwitch(),
         // body: buildDropdownButton(),
         // body: buildExpansionTile(context),
+        // body: buildMarquee(),
+        // body: buildImagePicker(),
+        body: Center(
+            child: ElevatedButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext ctx) {
+                        return AlertDialog(
+                          title: const Text('Select a color'),
+                          content: Column(
+                            children: <Widget>[
+                              // const SingleChildScrollView(
+                              //   child: null,
+                              // ),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(ctx);
+                                  },
+                                  child: const Text('Close'))
+                            ],
+                          ),
+                        );
+                      });
+                },
+                child: const Text('Change My Color'))),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: fetchImage,
+        //   tooltip: 'Increment',
+        // child: const Icon(Icons.add),
+        // ),
       ),
+    );
+  }
+
+  Center buildImagePicker() {
+    return Center(
+      child: pickedImage == null ? null : Image.file(pickedImage!),
+    );
+  }
+
+  ListView buildMarquee() {
+    return ListView(
+      children: [
+        const SizedBox(height: 15),
+        SizedBox(
+          height: 70,
+          child: Card(
+            color: Colors.teal,
+            child: Marquee(
+              text: 'Hello for You in My Store',
+              blankSpace: 200,
+              // startPadding: 1,
+              style: const TextStyle(
+                fontSize: 25,
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.bold,
+              ),
+              accelerationDuration: const Duration(milliseconds: 1500),
+            ),
+          ),
+        ),
+        const SizedBox(height: 15),
+        SizedBox(
+          height: 70,
+          child: Card(
+            color: Colors.teal,
+            child: Marquee(
+              text: 'Go out !',
+              blankSpace: 200,
+              textDirection: TextDirection.rtl,
+              scrollAxis: Axis.horizontal,
+              // startPadding: 1,
+              style: const TextStyle(
+                fontSize: 25,
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.bold,
+              ),
+              accelerationDuration: const Duration(milliseconds: 1500),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
