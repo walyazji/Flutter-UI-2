@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:marquee/marquee.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -54,6 +55,18 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Color currentColor = Colors.teal;
+  void changeColor(Color color) => setState(() => currentColor = color);
+
+  List<Color> _defaultColors = [
+    Colors.red,
+    Colors.pink,
+    Colors.purple,
+    Colors.deepPurple,
+    Colors.indigo,
+    Colors.blueGrey,
+    Colors.black
+  ];
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -107,25 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
         body: Center(
             child: ElevatedButton(
                 onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext ctx) {
-                        return AlertDialog(
-                          title: const Text('Select a color'),
-                          content: Column(
-                            children: <Widget>[
-                              // const SingleChildScrollView(
-                              //   child: null,
-                              // ),
-                              ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.pop(ctx);
-                                  },
-                                  child: const Text('Close'))
-                            ],
-                          ),
-                        );
-                      });
+                  MyDialog();
                 },
                 child: const Text('Change My Color'))),
 
@@ -136,6 +131,31 @@ class _MyHomePageState extends State<MyHomePage> {
         // ),
       ),
     );
+  }
+
+  void MyDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Select a color'),
+            content: Column(
+              children: <Widget>[
+                SingleChildScrollView(
+                  child: BlockPicker(
+                      availableColors: _defaultColors,
+                      pickerColor: currentColor,
+                      onColorChanged: changeColor),
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Close'))
+              ],
+            ),
+          );
+        });
   }
 
   Center buildImagePicker() {
